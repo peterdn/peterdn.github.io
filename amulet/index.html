@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0603" />
+  <title>Spell!</title>
+  <meta name="description" content="You have been struck by a spell." />
+  <style>
+    :root {
+      --bg: #0a0603;
+      --ember: #ff9a3c;
+      --flame-1: #fff3b0;
+      --flame-2: #ffb02e;
+      --flame-3: #ff5a1f;
+      --flame-4: #d61f06;
+      --label: #ffd9a0;
+      --ink: #f4e9d8;
+      --muted: #b79b7d;
+    }
+
+    /* Ice theme (Cone of Cold): same shape, cold palette. */
+    body.ice {
+      --bg: #05070d;
+      --ember: #7cd4ff;
+      --flame-1: #eafdff;
+      --flame-2: #a9e7ff;
+      --flame-3: #4fb0f4;
+      --flame-4: #1f6fd6;
+      --label: #cdeeff;
+      --ink: #e6f3ff;
+      --muted: #8ea9c4;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { height: 100%; margin: 0; }
+
+    body {
+      background:
+        radial-gradient(120% 80% at 50% 8%, #2a1206 0%, #14070200 60%),
+        radial-gradient(100% 70% at 50% 100%, #3a1502 0%, #0a060300 55%),
+        var(--bg);
+      color: var(--ink);
+      font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
+      overflow: hidden;
+    }
+
+    body.ice {
+      background:
+        radial-gradient(120% 80% at 50% 8%, #06263f 0%, #04101f00 60%),
+        radial-gradient(100% 70% at 50% 100%, #06304f 0%, #05091200 55%),
+        var(--bg);
+    }
+
+    main {
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: rise 700ms cubic-bezier(.16,.84,.44,1) both;
+    }
+
+    .kicker {
+      font-size: clamp(13px, 3.6vw, 16px);
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: var(--ember);
+      margin: 0 0 4px;
+      padding-left: 0.42em; /* balance the trailing letter-spacing */
+      opacity: 0.9;
+    }
+
+    .damage {
+      position: relative;
+      font-weight: 900;
+      line-height: 0.9;
+      font-size: clamp(96px, 42vw, 240px);
+      background: linear-gradient(180deg, var(--flame-1) 0%, var(--flame-2) 38%, var(--flame-3) 70%, var(--flame-4) 100%);
+      background-size: 100% 220%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 18px rgba(255, 120, 30, 0.55))
+              drop-shadow(0 0 44px rgba(214, 31, 6, 0.35));
+      animation: flame-flow 2.6s ease-in-out infinite, flicker 2.8s ease-in-out infinite;
+    }
+
+    .ice .damage {
+      filter: drop-shadow(0 0 18px rgba(90, 180, 255, 0.55))
+              drop-shadow(0 0 44px rgba(43, 111, 214, 0.35));
+      animation: flame-flow 2.6s ease-in-out infinite, flicker-ice 2.8s ease-in-out infinite;
+    }
+
+    .label {
+      font-size: clamp(20px, 6.4vw, 34px);
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--label);
+      margin-top: 6px;
+    }
+
+    .sentence {
+      font-size: clamp(15px, 4.2vw, 19px);
+      color: var(--muted);
+      margin: 14px 0 0;
+      max-width: 34ch;
+    }
+
+    /* Fallback view (no valid spell param) */
+    .glyph { font-size: clamp(72px, 30vw, 150px); line-height: 1;
+             filter: drop-shadow(0 0 24px rgba(255,120,30,.5)); }
+
+    footer {
+      margin-top: 34px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      align-items: center;
+      justify-content: center;
+    }
+    footer a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      padding: 8px 4px;
+      border-bottom: 1px solid transparent;
+      transition: color .18s ease, border-color .18s ease;
+    }
+    footer a:hover, footer a:focus-visible {
+      color: var(--ember);
+      border-bottom-color: var(--ember);
+      outline: none;
+    }
+    @keyframes flame-flow {
+      0%, 100% { background-position: 50% 0%; }
+      50%      { background-position: 50% 100%; }
+    }
+    @keyframes flicker {
+      0%, 100% { filter: drop-shadow(0 0 18px rgba(255,120,30,.55)) drop-shadow(0 0 44px rgba(214,31,6,.35)); }
+      45%      { filter: drop-shadow(0 0 26px rgba(255,150,50,.7))  drop-shadow(0 0 60px rgba(214,31,6,.45)); }
+      70%      { filter: drop-shadow(0 0 16px rgba(255,110,25,.5))  drop-shadow(0 0 38px rgba(214,31,6,.3)); }
+    }
+    @keyframes flicker-ice {
+      0%, 100% { filter: drop-shadow(0 0 18px rgba(90,180,255,.55)) drop-shadow(0 0 44px rgba(43,111,214,.35)); }
+      45%      { filter: drop-shadow(0 0 26px rgba(130,205,255,.7)) drop-shadow(0 0 60px rgba(43,111,214,.45)); }
+      70%      { filter: drop-shadow(0 0 16px rgba(80,170,255,.5))  drop-shadow(0 0 38px rgba(43,111,214,.3)); }
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px) scale(.98); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .damage { animation: none; }
+      main { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app" aria-live="polite"><!-- populated by script --></main>
+
+  <script>
+    (function () {
+      // Blog + socials. Edit these to taste — the two below are real; add more as needed.
+      var LINKS = [
+        { label: "Blog", href: "https://peterdn.com" },
+        { label: "GitHub", href: "https://github.com/peterdn" }
+        // TODO: add Mastodon / Bluesky / Instagram etc. here, e.g.
+        // { label: "Bluesky", href: "https://bsky.app/profile/…" },
+      ];
+
+      // Each spell is keyed by its own URL param, so the amulet just serves
+      // ?fireball=X in fire mode or ?coneofcold=X in ice mode. Fireball = 8d6
+      // fire damage (8–48); Cone of Cold = 8d8 cold damage (8–64).
+      var SPELLS = [
+        { param: "fireball",   theme: "fire", name: "Fireball",     type: "fire damage", kicker: "A fireball strikes" },
+        { param: "coneofcold", theme: "ice",  name: "Cone of Cold", type: "cold damage", kicker: "A cone of cold strikes" }
+      ];
+
+      function footerHTML() {
+        var links = LINKS.map(function (l) {
+          return '<a href="' + l.href + '" rel="me noopener">' + l.label + '</a>';
+        }).join('');
+        return '<footer>' + links + '</footer>';
+      }
+
+      var params = new URLSearchParams(window.location.search);
+      var hit = null, dmg = NaN;
+      for (var i = 0; i < SPELLS.length; i++) {
+        var raw = params.get(SPELLS[i].param);
+        if (raw === null) continue;
+        var n = parseInt(raw, 10);
+        if (Number.isFinite(n) && n > 0 && n < 1000) { hit = SPELLS[i]; dmg = n; break; }
+      }
+
+      var app = document.getElementById('app');
+
+      if (hit) {
+        if (hit.theme === 'ice') {
+          document.body.classList.add('ice');
+          var tc = document.querySelector('meta[name="theme-color"]');
+          if (tc) tc.setAttribute('content', '#05070d');
+        }
+        document.title = hit.name + ' hits you for ' + dmg + ' ' + hit.type + '!';
+        app.innerHTML =
+          '<p class="kicker">' + hit.kicker + '</p>' +
+          '<div class="damage">' + dmg + '</div>' +
+          '<p class="label">' + hit.type + '</p>' +
+          '<p class="sentence">' + hit.name + ' hits you for <strong>' + dmg + '</strong> ' + hit.type + '!</p>' +
+          footerHTML();
+      } else {
+        // No valid roll in the URL — friendly landing state.
+        app.innerHTML =
+          '<div class="glyph">🔥</div>' +
+          '<p class="sentence">Tap the amulet with your phone to take a spell to the face.</p>' +
+          footerHTML();
+      }
+    })();
+  </script>
+</body>
+</html>
