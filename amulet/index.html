@@ -123,7 +123,10 @@
              filter: drop-shadow(0 0 24px rgba(255,120,30,.5)); }
 
     footer {
-      margin-top: 34px;
+      position: fixed;
+      bottom: max(24px, env(safe-area-inset-bottom));
+      left: 0;
+      right: 0;
       display: flex;
       flex-wrap: wrap;
       gap: 10px 18px;
@@ -175,6 +178,7 @@
 </head>
 <body>
   <main id="app" aria-live="polite"><!-- populated by script --></main>
+  <footer id="social-links"><!-- populated by script --></footer>
 
   <script>
     (function () {
@@ -206,10 +210,9 @@
       ];
 
       function footerHTML() {
-        var links = LINKS.map(function (l) {
+        return LINKS.map(function (l) {
           return '<a href="' + l.href + '" rel="me noopener">' + (ICONS[l.label] || '') + l.label + '</a>';
         }).join('');
-        return '<footer>' + links + '</footer>';
       }
 
       var params = new URLSearchParams(window.location.search);
@@ -222,6 +225,8 @@
       }
 
       var app = document.getElementById('app');
+      var socialLinks = document.getElementById('social-links');
+      socialLinks.innerHTML = footerHTML();
 
       if (hit) {
         if (hit.theme === 'ice') {
@@ -234,14 +239,12 @@
           '<p class="kicker">' + hit.kicker + '</p>' +
           '<div class="damage">' + dmg + '</div>' +
           '<p class="label">' + hit.type + '</p>' +
-          '<p class="sentence">' + hit.name + ' hits you for <strong>' + dmg + '</strong> ' + hit.type + '!</p>' +
-          footerHTML();
+          '<p class="sentence">' + hit.name + ' hits you for <strong>' + dmg + '</strong> ' + hit.type + '!</p>';
       } else {
         // No valid roll in the URL — friendly landing state.
         app.innerHTML =
           '<div class="glyph">🔥</div>' +
-          '<p class="sentence">Tap the amulet with your phone to take a spell to the face.</p>' +
-          footerHTML();
+          '<p class="sentence">Tap the amulet with your phone to take a spell to the face.</p>';
       }
     })();
   </script>
